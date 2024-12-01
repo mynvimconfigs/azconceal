@@ -24,11 +24,11 @@ Press "ma" (without quotes) in command mode to add mark a to a point in the text
 
 Go to another point and press "mb" (without quotes) to add mark b.
 
-Then press '<Leader>x' to conceal everything but the region between a and b.
+Then press `<Leader>x` to conceal everything but the region between a and b.
 
-Or visually select a text and press <Leader>c to conceal it.
+Or visually select a text and press `<Leader>c` to conceal it.
 
-<Leader>u will unconceal everything.
+`<Leader>u` will unconceal everything.
 
 ### Key Bindings
 - `<Leader>c`: Conceal visually selected text and create a fold.
