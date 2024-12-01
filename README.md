@@ -20,6 +20,7 @@ After installing, restart Neovim and run `:PlugInstall` to complete the installa
 
 To use the standard key bindings, put the following code into your init.nvim file (or adapt the key choices to your like):
 
+```vim
 ' --------------------------------------------------------
 " Config azconceal key bindings
 lua << EOF
@@ -34,7 +35,7 @@ vim.api.nvim_set_keymap(
 EOF
 nnoremap <leader>x ggV'ak:<C-U>set foldtext=CustomFoldText()<CR>:<C-U>set foldmethod=manual<CR>:<C-U>call ConcealSelectedText()<CR>'zjVG$:<C-U>set foldtext=CustomFoldText()<CR>:<C-U>set foldmethod=manual<CR>:<C-U>call ConcealSelectedText()<CR>:source ~/.config/nvim/plugin/restrict_movements.nvim<CR>k
 ' --------------------------------------------------------
-
+```
 
 ## Usage
 
