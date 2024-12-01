@@ -10,15 +10,15 @@ You can also visually select a text and conceal the selection.
 
 ## Installation
 
-Use a plugin manager like `vim-plug` to install, by inconluding the following code into your init.nvim file:
-
+1. Copy the files azconceal.nvim, restrict_movements.nvim, and unrestrict_movements.nvim to your ~/.config/nvim/plugin/ directory.
+2. Add to the end of your ~/.config/nvim/init.vim file the following line.
 ```vim
-Plug 'mynvimconfigs/azconceal'
+source ~/.config/nvim/plugin/azconceal.nvim
 ```
 
-After installing, restart Neovim and run `:PlugInstall` to complete the installation.
+Optional:
 
-To use the standard key bindings, put the following code into your init.nvim file (or adapt the key choices to your like):
+If you want to change the default key bindings, adapt the following lines that appear in the azconceal.nvim file. Note the `<Leader>c`, `<Leader>u`, and `<Leader>x` occurrences below, and adapt them according to your preference.
 
 ```vim
 ' --------------------------------------------------------
