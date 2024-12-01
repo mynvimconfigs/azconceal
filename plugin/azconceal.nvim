@@ -1,0 +1,84 @@
+" ---\ ConcealSelectedText /------------------------------------------------------------------{{{
+function! ConcealSelectedText() range
+lua << EOF
+    local start_pos = vim.fn.getpos("'<")
+    local end_pos = vim.fn.getpos("'>")
+
+    -- Adjust for 1-based to 0-based indexing for rows and columns
+    local start_row = start_pos[2] - 1
+    local start_col = start_pos[3] - 1
+    local end_row = end_pos[2] - 1
+    local end_col = end_pos[3]
+
+    -- Ensure end_col is within the bounds of the line
+    local line_length = vim.fn.col({end_row + 1, '$'}) - 1
+    if end_col > line_length then
+        end_col = line_length
+    end
+
+    -- Create a namespace (or use an existing one)
+    local ns_id = vim.api.nvim_create_namespace("conceal_ns")
+
+    -- Add an extmark with conceal property
+    vim.api.nvim_buf_set_extmark(0, ns_id, start_row, start_col, {
+        end_row = end_row,
+        end_col = end_col,
+        conceal = " ", -- Concealed text will appear as a space
+    })
+
+    -- Create a fold for the concealed lines
+    vim.api.nvim_command(start_row + 1 .. ',' .. end_row + 1 .. 'fold')
+EOF
+endfunction
+
+function! UnconcealAllText()
+lua << EOF
+    -- Clear all extmarks in the "conceal_ns" namespace
+    local ns_id = vim.api.nvim_create_namespace("conceal_ns")
+    vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
+
+    -- Remove all folds in the buffer
+    -- vim.api.nvim_command('normal! zE') -- zE removes all folds
+EOF
+endfunction
+
+function! CustomFoldText()
+    return ''
+endfunction
+
+" Function to restrict moving up using marks
+function! RestrictMoveUpWithMarks()
+    let start_line = line("'a")
+    if line('.') > start_line
+        normal! k
+    endif
+endfunction
+
+" Function to restrict moving down using marks
+function! RestrictMoveDownWithMarks()
+    let end_line = line("'z")
+    if line('.') < end_line
+        normal! j
+    endif
+endfunction
+
+function! SetupRestrictedNavigation()
+    nnoremap <silent> k :call RestrictMoveUpWithMarks()<CR>
+    nnoremap <silent> j :call RestrictMoveDownWithMarks()<CR>
+    " Optionally, clear the mappings after the operation to avoid persistence
+    autocmd CursorMoved * ++once :nunmap k | :nunmap j
+endfunction
+
+lua << EOF
+-- Key mappings for conceal/unconceal functionality
+vim.api.nvim_set_keymap('v', '<Leader>c', ':<C-U>set nofoldenable<CR>:<C-U>call ConcealSelectedText()<CR>:<C-U>set foldtext=CustomFoldText()<CR>:<C-U>set foldmethod=manual<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap(
+  'n',
+  '<Leader>u',
+  [[:<C-U>set nofoldenable<CR>:<C-U>set foldtext=foldtext()<CR>:source ~/.config/nvim/plugin/unrestrict_movements.nvim<CR>:set foldmethod=marker<CR>:call UnconcealAllText()<CR>:<C-U>set foldmethod=marker<CR>zm]],
+  { noremap = true, silent = true }
+)
+EOF
+
+nnoremap <leader>x ggV'ak:<C-U>set foldtext=CustomFoldText()<CR>:<C-U>set foldmethod=manual<CR>:<C-U>call ConcealSelectedText()<CR>'zjVG$:<C-U>set foldtext=CustomFoldText()<CR>:<C-U>set foldmethod=manual<CR>:<C-U>call ConcealSelectedText()<CR>:source ~/.config/nvim/plugin/restrict_movements.nvim<CR>k
+" ---}}}
