@@ -1,0 +1,20 @@
+" Custom functions to handle restricted movement using marks
+function! RestrictMoveUpWithMarks()
+    let start_line = line("'a")  " Get the line number of mark 'a
+    if line('.') > start_line
+        normal! k
+    endif
+endfunction
+
+function! RestrictMoveDownWithMarks()
+    let end_line = line("'z")  " Get the line number of mark 'z
+    if line('.') < end_line
+        normal! j
+    endif
+endfunction
+
+" Remap keys for normal mode
+nnoremap <silent> k :call RestrictMoveUpWithMarks()<CR>
+nnoremap <silent> j :call RestrictMoveDownWithMarks()<CR>
+nnoremap <silent> gg 'a
+nnoremap <silent> G 'z
