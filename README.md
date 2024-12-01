@@ -20,7 +20,11 @@ After installing, restart Neovim and run `:PlugInstall` to complete the installa
 
 ## Usage
 
-Press ma to add mark a to a point in the text. Go to another point and press mb to add mark b. Then press <Leader>x to conceal everything but the region between a and b.
+Press "ma" (without quotes) in command mode to add mark a to a point in the text.
+
+Go to another point and press "mb" (without quotes) to add mark b.
+
+Then press '<Leader>x' to conceal everything but the region between a and b.
 
 Or visually select a text and press <Leader>c to conceal it.
 
